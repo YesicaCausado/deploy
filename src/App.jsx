@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
+import logo from './assets/logo.png'
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true)
+  const [splashFading, setSplashFading] = useState(false)
   const [isPressed, setIsPressed] = useState(false)
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [bestTime, setBestTime] = useState(0)
@@ -23,6 +26,20 @@ function App() {
   
   const timerRef = useRef(null)
   const timeElapsedRef = useRef(0)
+
+  // Splash screen timer
+  useEffect(() => {
+    const fadeTimer = setTimeout(() => {
+      setSplashFading(true)
+    }, 2500)
+    const hideTimer = setTimeout(() => {
+      setShowSplash(false)
+    }, 3500)
+    return () => {
+      clearTimeout(fadeTimer)
+      clearTimeout(hideTimer)
+    }
+  }, [])
 
   useEffect(() => {
     timeElapsedRef.current = timeElapsed
@@ -250,17 +267,32 @@ function App() {
   }
 
   return (
-    <div 
-      className={`game-container ${flashEffect ? 'flash' : ''} ${cursorDisappear ? 'no-cursor' : ''}`}
-      style={{
-        transform: `translate(${Math.random() * shakeIntensity - shakeIntensity/2}px, ${Math.random() * shakeIntensity - shakeIntensity/2}px) rotate(${rotateScreen}deg)`,
-        filter: colorChange ? 'hue-rotate(180deg) saturate(200%)' : 'none',
-        transition: 'transform 0.1s, filter 0.3s'
-      }}
-    >
-      <div className="header">
-        <h1 className={`title ${glitchText ? 'glitch' : ''}`}>🎯 Enfoque Extremo</h1>
-        <p className="subtitle">Mantén presionado el botón mientras resistes las distracciones</p>
+    <>
+      {showSplash && (
+        <div className={`splash-screen ${splashFading ? 'fade-out' : ''}`}>
+          <div className="splash-content">
+            <img src={logo} alt="Enfoque Extremo" className="splash-logo" />
+            <h1 className="splash-title">Enfoque Extremo</h1>
+            <p className="splash-subtitle">¿Podrás mantener la concentración?</p>
+            <div className="splash-loader">
+              <div className="splash-loader-bar"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div 
+        className={`game-container ${flashEffect ? 'flash' : ''} ${cursorDisappear ? 'no-cursor' : ''}`}
+        style={{
+          transform: `translate(${Math.random() * shakeIntensity - shakeIntensity/2}px, ${Math.random() * shakeIntensity - shakeIntensity/2}px) rotate(${rotateScreen}deg)`,
+          filter: colorChange ? 'hue-rotate(180deg) saturate(200%)' : 'none',
+          transition: 'transform 0.1s, filter 0.3s'
+        }}
+      >
+        <div className="header">
+          <img src={logo} alt="Logo" className="header-logo" />
+          <h1 className={`title ${glitchText ? 'glitch' : ''}`}>Enfoque Extremo</h1>
+          <p className="subtitle">Mantén presionado el botón mientras resistes las distracciones</p>
       </div>
 
       <div className="stats">
@@ -355,6 +387,7 @@ function App() {
       )}
 
     </div>
+    </>
   )
 }
 
