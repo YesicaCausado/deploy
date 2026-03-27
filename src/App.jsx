@@ -21,6 +21,7 @@ function App() {
   const [rotateScreen, setRotateScreen] = useState(0)
   const [glitchText, setGlitchText] = useState(false)
   
+  const timerRef = useRef(null)
   const timeElapsedRef = useRef(0)
 
   useEffect(() => {
@@ -349,7 +350,7 @@ function App() {
 
       {soundAlert && (
         <div className="sound-alert">
-          � ¡ALERTA! 🚨
+          🔊 ¡ALERTA! 🚨
         </div>
       )}
 
